@@ -1,16 +1,11 @@
 <template>
   <BasicLayout>
-    
-    <!-- Logotipo del ecommerce -->
-
     <div class="encabezado">
       <img src="../assets/logo_definitivo.png" alt="" class="centered-image" />
       <hr class="custom-hr"/>
     </div>
-
-<!-- Novedades del ecommerce -->
-
-    <h1>Nuestras últimas novedades:</h1>
+    
+    <h2>{{ nombreDelProducto }}</h2>
     <br />
     <div class="ui grid">
       <div
@@ -21,41 +16,58 @@
         <Product :product="product" />
       </div>
     </div>
-    
-    <!-- Slider de productos -->
-  
   </BasicLayout>
 </template>
 
 <script>
 import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 import BasicLayout from "../layouts/BasicLayout";
-import { getProducts } from "../api/product";
 import Product from "../components/Product";
-
+import { getProductsCategory } from "../api/product";
 
 export default {
-  name: "Home",
+  name: "Category",
   components: {
     BasicLayout,
     Product,
   },
+  watch: {
+    $route(to, from) {
+      this.getProduts(to.params.category);
+    },
+  },
   setup() {
     let products = ref(null);
+    let nombreDelProducto = ref(null);
+    const { params } = useRoute();
 
-    onMounted(async () => {
-      const response = await getProducts(8);
-      products.value = response.data;
+    onMounted(() => {
+      getProduts(params.category);
     });
 
+    const getProduts = async (category) => {
+      const response = await getProductsCategory(category);
+      products.value = response.data;
+      //nombreDelProducto.value = products;
+      if (products.value && products.value.length > 0) {
+        nombreDelProducto.value = "Estos son los "+ products.value[0].attributes.category.data.attributes.title +" que Bubu y Dudu tienen para ti";
+      } else {
+        // Si no hay productos, asigna un mensaje o valor por defecto
+        nombreDelProducto.value = "Bubu y Dudu no tienen productos disponibles por el momento en esta categoria.";
+      }
+    };
+
     return {
+      getProduts,
       products,
+      nombreDelProducto,
     };
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style>
 .encabezado {
   display: flex;
   flex-direction: column;
@@ -66,7 +78,7 @@ export default {
 }
 
 .centered-image {
-  //max-width: 100%; /* Ajusta el ancho máximo de la imagen */
+  /* max-width: 100%; /* Ajusta el ancho máximo de la imagen */
   max-height: 74%; /* Ajusta la altura máxima de la imagen */
   
 }
