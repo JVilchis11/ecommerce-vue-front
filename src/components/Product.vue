@@ -1,8 +1,12 @@
 <template>
   <div class="ui card product">
     <div class="image">
-      <img
+      <!-- <img
         :src="API_URL + product.attributes.image.data.attributes.url"
+        :alt="product.attributes.name"
+      /> -->
+      <img
+        :src="product.attributes.image.data.attributes.url"
         :alt="product.attributes.name"
       />
     </div>

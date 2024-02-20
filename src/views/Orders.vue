@@ -13,7 +13,7 @@
             <div class="product" v-for="product in order.attributes.data" :key="product.id">
               <div>
                 <img
-                  :src="API_URL + product.data.attributes.image.data.attributes.url"
+                  :src="product.data.attributes.image.data.attributes.url"
                   :alt="product.name"
                   class="ui image"
                 />

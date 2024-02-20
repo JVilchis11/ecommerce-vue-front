@@ -3,7 +3,7 @@
       <div class="product" v-for="product in products" :key="product.id">
         <img
           class="ui image fluid"
-          :src="API_URL + product.data.attributes.image.data.attributes.url"
+          :src="product.data.attributes.image.data.attributes.url"
           :alt="product.name"
         /> 
         
